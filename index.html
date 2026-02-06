@@ -2,25 +2,118 @@
 <html>
   <head>
     <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AR Marker Demo</title>
     <script src="https://aframe.io/releases/1.4.2/aframe.min.js"></script>
     <script src="https://cdn.jsdelivr.net/gh/AR-js-org/AR.js@3.3.2/aframe/build/aframe-ar.js"></script>
+    <style>
+      .debug-info {
+        position: absolute;
+        top: 10px;
+        left: 10px;
+        background: rgba(0, 0, 0, 0.7);
+        color: white;
+        padding: 10px;
+        font-family: monospace;
+        font-size: 12px;
+        z-index: 999;
+        border-radius: 5px;
+      }
+    </style>
   </head>
 
   <body style="margin: 0; overflow: hidden;">
+    <div class="debug-info" id="debug">
+      <div>Estado: Inicializando...</div>
+      <div>Marcador: No detectado</div>
+      <div>Modelo: Cargando...</div>
+    </div>
+
     <a-scene
       embedded
       arjs="sourceType: webcam; debugUIEnabled: false;"
       renderer="logarithmicDepthBuffer: true;">
 
-      <a-marker preset="hiro">
+      <a-marker preset="hiro" id="marker">
+        <!-- Modelo 3D -->
         <a-entity
+          id="model"
           gltf-model="models.glb"
           scale="1 1 1"
-          position="0 0 0">
+          position="0 0 0"
+          rotation="-90 0 0">
         </a-entity>
+
+        <!-- Cubo de prueba (visible si el modelo falla) -->
+        <a-box 
+          position="0 0.5 0" 
+          material="color: red;" 
+          scale="0.5 0.5 0.5"
+          visible="false"
+          id="testCube">
+        </a-box>
       </a-marker>
 
       <a-entity camera></a-entity>
     </a-scene>
+
+    <script>
+      // Debug y eventos
+      const debug = document.getElementById('debug');
+      const marker = document.getElementById('marker');
+      const model = document.getElementById('model');
+      const testCube = document.getElementById('testCube');
+      
+      let modelLoaded = false;
+      let markerDetected = false;
+
+      function updateDebug() {
+        debug.innerHTML = `
+          <div>Estado: ${markerDetected ? '✅ Activo' : '⏸️ Buscando marcador'}</div>
+          <div>Marcador: ${markerDetected ? '✅ Detectado' : '❌ No detectado'}</div>
+          <div>Modelo: ${modelLoaded ? '✅ Cargado' : '⏳ Cargando...'}</div>
+          <div style="margin-top:5px; font-size:10px;">Apunta la cámara al marcador Hiro</div>
+        `;
+      }
+
+      // Eventos del modelo
+      model.addEventListener('model-loaded', () => {
+        console.log('✅ Modelo GLB cargado');
+        modelLoaded = true;
+        updateDebug();
+      });
+
+      model.addEventListener('model-error', (e) => {
+        console.error('❌ Error cargando modelo:', e);
+        testCube.setAttribute('visible', 'true');
+        debug.innerHTML = `
+          <div style="color: yellow;">⚠️ Error: No se pudo cargar el modelo</div>
+          <div>Mostrando cubo de prueba</div>
+          <div style="margin-top:5px;">Verifica que models.glb sea válido</div>
+        `;
+      });
+
+      // Eventos del marcador
+      marker.addEventListener('markerFound', () => {
+        console.log('✅ Marcador detectado');
+        markerDetected = true;
+        updateDebug();
+      });
+
+      marker.addEventListener('markerLost', () => {
+        console.log('⏸️ Marcador perdido');
+        markerDetected = false;
+        updateDebug();
+      });
+
+      updateDebug();
+
+      // Ocultar debug después de 15 segundos si todo funciona
+      setTimeout(() => {
+        if (modelLoaded && markerDetected) {
+          debug.style.opacity = '0.3';
+        }
+      }, 15000);
+    </script>
   </body>
 </html>
