@@ -4,6 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AR Marker Demo</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📱</text></svg>">
     <script src="https://aframe.io/releases/1.5.0/aframe.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/ar.js@3.4.5/aframe/build/aframe-ar.min.js"></script>
     <style>
@@ -35,7 +36,7 @@
       vr-mode-ui="enabled: false"
       renderer="logarithmicDepthBuffer: true; precision: medium;">
 
-      <a-marker preset="hiro" id="marker" smooth="true" smoothCount="5" smoothTolerance="0.01" smoothThreshold="2"></a-marker>
+      <a-marker preset="hiro" id="marker" smooth="true" smoothCount="5" smoothTolerance="0.01" smoothThreshold="2">
         <!-- Modelo 3D -->
         <a-entity
           id="model"
@@ -50,7 +51,7 @@
           position="0 0.5 0" 
           material="color: red;" 
           scale="0.5 0.5 0.5"
-          visible="false"
+          visible="true"
           id="testCube">
         </a-box>
       </a-marker>
