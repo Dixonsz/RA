@@ -9,6 +9,28 @@
 
     <!-- AR.js -->
     <script src="https://raw.githack.com/AR-js-org/AR.js/master/aframe/build/aframe-ar.js"></script>
+
+    <!-- Componente para forzar animación -->
+    <script>
+      AFRAME.registerComponent('play-animation-on-marker', {
+        init: function () {
+          const el = this.el;
+          el.addEventListener('markerFound', () => {
+            const model = el.querySelector('[gltf-model]');
+            if (model && model.components['animation-mixer']) {
+              model.components['animation-mixer'].play();
+            }
+          });
+
+          el.addEventListener('markerLost', () => {
+            const model = el.querySelector('[gltf-model]');
+            if (model && model.components['animation-mixer']) {
+              model.components['animation-mixer'].stop();
+            }
+          });
+        }
+      });
+    </script>
   </head>
 
   <body style="margin: 0; overflow: hidden;">
@@ -19,13 +41,12 @@
     >
 
       <!-- Marcador Hiro -->
-      <a-marker preset="hiro">
+      <a-marker preset="hiro" play-animation-on-marker>
         <a-entity
           gltf-model="model.glb"
-          animation-mixer="clip: *; loop: repeat; timeScale: 1"
+          animation-mixer="loop: repeat"
           material="shader: flat; transparent: true; alphaTest: 0.5"
           scale="0.15 0.15 0.15"
-          position="0 0 0"
           rotation="0 180 0"
         >
         </a-entity>
