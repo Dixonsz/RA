@@ -20,7 +20,9 @@
 
       <a-marker preset="hiro">
         <a-entity
-          obj-model="obj: url(Nave espacial.obj); mtl: url(Nave espacial.mtl)"
+          gltf-model="hongo malo.glb"
+          animation-mixer="loop: repeat"
+          material="shader: flat; transparent: true; alphaTest: 0.5"
           scale="0.15 0.15 0.15"
           rotation="0 180 0"
         ></a-entity>
