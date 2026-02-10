@@ -4,28 +4,23 @@
     <meta charset="utf-8" />
     <title>RA con marcador</title>
 
-    <!-- A-Frame -->
     <script src="https://aframe.io/releases/1.4.2/aframe.min.js"></script>
 
-    <!-- AR.js -->
     <script src="https://raw.githack.com/AR-js-org/AR.js/master/aframe/build/aframe-ar.js"></script>
   </head>
 
   <body style="margin: 0; overflow: hidden">
     <a-scene embedded arjs>
-      <!-- MARCADOR -->
       <a-marker preset="hiro">
-        <!-- MODELO 3D -->
         <a-entity
-          gltf-model="model.glb"
-          scale="0.3 0.3 0.3"
+          gltf-model="Modelo animado final.glb"
+          scale="0.15 0.15 0.15"
           position="0 0 0"
           rotation="0 180 0"
         >
         </a-entity>
       </a-marker>
 
-      <!-- CÁMARA -->
       <a-entity camera></a-entity>
     </a-scene>
   </body>
